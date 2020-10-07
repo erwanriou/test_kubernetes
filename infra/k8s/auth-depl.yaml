@@ -11,7 +11,19 @@ spec:
     metadata:
       labels:
         app: auth
-    sepc:
+    spec:
       containers:
         - name: auth
           image: erwanriou/ticketshop_auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: auth
+      port: 3000
+      targetPort: 3000
