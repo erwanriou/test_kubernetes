@@ -1,6 +1,7 @@
 require("express-async-errors")
 const express = require("express")
 const bodyParser = require("body-parser")
+const mongoose = require("mongoose")
 
 // IMPORT ROUTES
 const routes = require("./routes")
@@ -24,7 +25,22 @@ app.all("*", async (req, res) => {
 // USE CUSTOM MIDDLWWARE
 app.use(errorHandler)
 
+const start = async () => {
+  try {
+    await mongoose.connect("mongodb://auth-srv-mongo:27017/auth", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true
+    })
+    console.log("Auth Mongodb Connected")
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 // LISTEN APP
 app.listen(3000, () => {
   console.log("listening on port 3000!")
 })
+
+start()
