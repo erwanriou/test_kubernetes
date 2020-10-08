@@ -1,16 +1,15 @@
 const Errors = require("../factory/errors")
-const { RequestValdationError, DatabaseConnectionError } = Errors
+const { CustomError } = Errors
 
 module.exports = (err, req, res, next) => {
-  if (err instanceof RequestValdationError) {
-    console.log("handling as request validation error")
+  if (err instanceof CustomError) {
+    return res.status(err.statusCode).send({ errors: err.serializeErrors() })
   }
-  if (err instanceof DatabaseConnectionError) {
-    console.log("handling this error as db connection error")
-  }
-  res.status(400).send({
-    message: err.message
-  })
+
+  // CASE ERROR IS NOT HANDLED
+  res
+    .status(503)
+    .send({ errors: [{ message: `Something when wrong: ${err}` }] })
 
   return next()
 }
