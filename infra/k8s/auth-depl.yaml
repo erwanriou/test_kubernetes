@@ -15,6 +15,7 @@ spec:
       containers:
         - name: auth
           image: erwanriou/ticketshop_auth
+        # image: us.gcr.io/ticketing-291819/auth
 ---
 apiVersion: v1
 kind: Service
