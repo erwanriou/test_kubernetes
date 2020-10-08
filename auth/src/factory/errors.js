@@ -42,6 +42,23 @@ class DatabaseConnectionError extends CustomError {
   }
 }
 
+// CHILDREN CLASS
+class NotFoundError extends CustomError {
+  statusCode = 404
+  reason = "This path doesn't exist"
+
+  constructor(errors) {
+    super("Route not found")
+    this.errors = errors
+    Object.setPrototypeOf(this, NotFoundError.prototype)
+  }
+
+  serializeErrors() {
+    return [{ message: this.reason }]
+  }
+}
+
 exports.CustomError = CustomError
 exports.RequestValdationError = RequestValdationError
 exports.DatabaseConnectionError = DatabaseConnectionError
+exports.NotFoundError = NotFoundError
