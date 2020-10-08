@@ -1,5 +1,11 @@
 const express = require("express")
+
+// ERROR VALIDATIONS
 const validator = require("express-validator")
+const Errors = require("../../factory/errors")
+const { RequestValdationError, DatabaseConnectionError } = Errors
+
+// DECLARE ROUTER
 const router = express.Router()
 
 router.post(
@@ -15,10 +21,11 @@ router.post(
   (req, res) => {
     const errors = validator.validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).send(errors.array())
+      throw new RequestValdationError(errors.array())
     }
     const { email, password } = req.body
     console.log("Creating a user")
+    throw new DatabaseConnectionError()
     res.send("test")
   }
 )
