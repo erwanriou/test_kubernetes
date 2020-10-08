@@ -11,6 +11,3 @@ yarn-error.log*
 .prettierrc.yml
 .prettierignore
 .npmrc
-
-# TEST IGNORE
-/coverage

@@ -10,5 +10,4 @@ const requires = (path, array, extention) =>
 let routes = ["login", "logout", "register", "user"]
     routes = requires("api", routes, "users")
 
-
-module.exports = routes = [ ...routes ]
+module.exports = routes = [...routes]
