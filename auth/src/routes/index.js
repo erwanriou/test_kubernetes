@@ -1,12 +1,14 @@
 // REQUIRES FONCTION
-const requires = (path, array) =>
+const requires = (path, array, extention) =>
   array.map(item => ({
-    url: `/${path}/${item}`,
-    path: require(`../routes/${path}/${item}`)
+    path: require(`../routes/${path}/${item}`),
+    url: extention !== undefined
+      ? `/${path}/${extention}/${item}`
+      : `/${path}/${item}`
   }))
 
-let auth = ["users"]
-    auth = requires("api", auth)
+let routes = ["login", "logout", "register", "user"]
+    routes = requires("api", routes, "users")
 
 
-module.exports = routes = [ ...auth ]
+module.exports = routes = [ ...routes ]

@@ -4,7 +4,7 @@ const routes = require("./routes")
 
 const app = express()
 app.use(bodyParser.json())
-console.log(routes)
+
 routes.map(route => app.use(route.url, route.path))
 
 app.listen(3000, () => {
