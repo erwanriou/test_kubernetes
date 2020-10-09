@@ -1,9 +1,12 @@
 const express = require("express")
 
+// IMPORT MODELS
+const User = require("../../models/User")
+
 // ERROR VALIDATIONS
 const validator = require("express-validator")
 const Errors = require("../../factory/errors")
-const { RequestValdationError, DatabaseConnectionError } = Errors
+const { RequestValdationError } = Errors
 
 // DECLARE ROUTER
 const router = express.Router()
@@ -18,15 +21,18 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage("Password must be between 4 and 20 characters")
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validator.validationResult(req)
     if (!errors.isEmpty()) {
       throw new RequestValdationError(errors.array())
     }
     const { email, password } = req.body
-    console.log("Creating a user")
-    throw new DatabaseConnectionError()
-    res.send("test")
+    const existingUser = await User.findOne({ email })
+
+    if (existingUser) {
+      console.log("Email in use")
+      return res.send({})
+    }
   }
 )
 

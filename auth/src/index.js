@@ -25,7 +25,7 @@ app.all("*", async (req, res) => {
 // USE CUSTOM MIDDLWWARE
 app.use(errorHandler)
 
-const start = async () => {
+const connectDatabase = async () => {
   try {
     await mongoose.connect("mongodb://auth-srv-mongo:27017/auth", {
       useNewUrlParser: true,
@@ -43,4 +43,4 @@ app.listen(3000, () => {
   console.log("listening on port 3000!")
 })
 
-start()
+connectDatabase()
