@@ -6,11 +6,14 @@ const User = require("../../models/User")
 // ERROR VALIDATIONS
 const validator = require("express-validator")
 const Errors = require("../../factory/errors")
-const { RequestValdationError } = Errors
+const { RequestValdationError, BadRequestError } = Errors
 
 // DECLARE ROUTER
 const router = express.Router()
 
+// @route  POST api/users/register
+// @desc   Register a user
+// @access Public
 router.post(
   "/",
   [
@@ -29,11 +32,12 @@ router.post(
     const { email, password } = req.body
     const existingUser = await User.findOne({ email })
 
+    // CHECK IF USER EXIST
     if (existingUser) {
-      console.log("Email in use")
-      return res.send({})
+      throw new BadRequestError("Email in use")
     }
 
+    // CREATING USER
     const newUser = new User({
       email,
       password
