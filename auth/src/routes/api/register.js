@@ -1,4 +1,5 @@
 const express = require("express")
+const jwt = require("jsonwebtoken")
 
 // IMPORT MODELS
 const User = require("../../models/User")
@@ -38,13 +39,22 @@ router.post(
     }
 
     // CREATING USER
-    const newUser = new User({
+    const user = new User({
       email,
       password
     })
-    await newUser.save()
+    await user.save()
 
-    res.status(201).send(newUser)
+    // GENERATE JWT
+    const payload = {
+      id: user.id,
+      email: user.email
+    }
+
+    // STORE JWT
+    req.session = { jwt: jwt.sign(payload, "asdf") }
+
+    res.status(201).send(user)
   }
 )
 
