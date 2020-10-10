@@ -73,8 +73,25 @@ class BadRequestError extends CustomError {
   }
 }
 
+// CHILDREN CLASS
+class NotAuthorizedError extends CustomError {
+  statusCode = 401
+  reason = "Not authorized"
+
+  constructor(errors) {
+    super("not authorized")
+    this.errors = errors
+    Object.setPrototypeOf(this, NotAuthorizedError.prototype)
+  }
+
+  serializeErrors() {
+    return [{ message: this.reason }]
+  }
+}
+
 exports.CustomError = CustomError
 exports.RequestValdationError = RequestValdationError
 exports.DatabaseConnectionError = DatabaseConnectionError
 exports.NotFoundError = NotFoundError
 exports.BadRequestError = BadRequestError
+exports.NotAuthorizedError = NotAuthorizedError
