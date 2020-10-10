@@ -36,5 +36,6 @@ it("returns a 200 on successfull login user", async () => {
   }
 
   await request(app).post("/api/users/register").send(user).expect(201)
-  await request(app).post("/api/users/login").send(user).expect(200)
+  const res = await request(app).post("/api/users/login").send(user).expect(200)
+  expect(res.get("Set-Cookie")).toBeDefined()
 })
