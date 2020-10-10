@@ -3,13 +3,12 @@ const { CustomError } = Errors
 
 module.exports = (err, req, res, next) => {
   if (err instanceof CustomError) {
-    return res.status(err.statusCode).send({ errors: err.serializeErrors() })
+    res.status(err.statusCode).send({ errors: err.serializeErrors() })
+  } else {
+    // CASE ERROR IS NOT HANDLED
+    res
+      .status(500)
+      .send({ errors: [{ message: `Something when wrong: ${err}` }] })
   }
-
-  // CASE ERROR IS NOT HANDLED
-  res
-    .status(503)
-    .send({ errors: [{ message: `Something when wrong: ${err}` }] })
-
-  return next()
+  next()
 }

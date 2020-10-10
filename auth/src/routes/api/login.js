@@ -14,6 +14,9 @@ const { BadRequestError } = Errors
 // DECLARE ROUTER
 const router = express.Router()
 
+// @route  POST api/users/register
+// @desc   Login a user
+// @access Public
 router.post(
   "/",
   [
@@ -48,7 +51,7 @@ router.post(
 
       res.status(200).send(existingUser)
     } else {
-      throw new BadRequestError("Incorrect password")
+      throw new BadRequestError("Invalid credentials")
     }
   }
 )
