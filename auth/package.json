@@ -2,7 +2,7 @@
   "name": "auth",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "nodemon src/server.js",
     "test": "jest --watchAll --runInBand"

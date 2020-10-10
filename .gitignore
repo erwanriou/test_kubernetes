@@ -11,3 +11,4 @@ yarn-error.log*
 .prettierrc.yml
 .prettierignore
 .npmrc
+.next
