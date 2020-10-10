@@ -4,7 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "nodemon src/server.js",
+    "test": "jest --watchAll --no-cache"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./src/test/setup.js"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -18,5 +25,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "5.10.8",
     "nodemon": "^2.0.3"
+  },
+  "devDependencies": {
+    "faker": "^5.1.0",
+    "jest": "^26.5.2",
+    "mongodb-memory-server": "^6.9.2",
+    "supertest": "^5.0.0"
   }
 }
