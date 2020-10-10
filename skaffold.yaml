@@ -7,15 +7,24 @@ deploy:
 build:
   local:
     push: false
-# googleCloudBuild:
-#   projectId: ticketing-291819
+  # googleCloudBuild:
+  #   projectId: ticketing-291819
   artifacts:
     - image: erwanriou/ticketshop_auth
-  # - image: us.gcr.io/ticketing-291819/auth
+      # - image: us.gcr.io/ticketing-291819/auth
       context: auth
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: 'src/**/*.js'
+          - src: "src/**/*.js"
+            dest: .
+    - image: erwanriou/ticketshop_client
+      # - image: us.gcr.io/ticketing-291819/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
             dest: .
