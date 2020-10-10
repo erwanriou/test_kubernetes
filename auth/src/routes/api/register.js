@@ -5,9 +5,10 @@ const jwt = require("jsonwebtoken")
 const User = require("../../models/User")
 
 // ERROR VALIDATIONS
+const validateRequest = require("../../middlewares/validateRequest")
 const validator = require("express-validator")
 const Errors = require("../../factory/errors")
-const { RequestValdationError, BadRequestError } = Errors
+const { BadRequestError } = Errors
 
 // DECLARE ROUTER
 const router = express.Router()
@@ -25,11 +26,8 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage("Password must be between 4 and 20 characters")
   ],
+  validateRequest,
   async (req, res) => {
-    const errors = validator.validationResult(req)
-    if (!errors.isEmpty()) {
-      throw new RequestValdationError(errors.array())
-    }
     const { email, password } = req.body
     const existingUser = await User.findOne({ email })
 
@@ -52,7 +50,7 @@ router.post(
     }
 
     // STORE JWT
-    req.session = { jwt: jwt.sign(payload, "asdf") }
+    req.session = { jwt: jwt.sign(payload, process.env.JWT_KEY) }
 
     res.status(201).send(user)
   }

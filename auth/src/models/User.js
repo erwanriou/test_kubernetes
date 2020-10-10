@@ -22,13 +22,22 @@ const UserSchema = new Schema({
   }
 })
 
-// MANAGE PASSWORD ENCRYPTION
-UserSchema.methods.validPassword = password => {
+// MANAGE PASSWORD ENCRYPTION DONT USE ARROW FUNCTIONS
+UserSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.passwordHash)
 }
 
-UserSchema.virtual("password").set(value => {
+UserSchema.virtual("password").set(function (value) {
   this.passwordHash = bcrypt.hashSync(value, 12)
 })
+
+UserSchema.options.toJSON = {
+  transform(doc, ret) {
+    ret.id = ret._id
+    delete ret._id
+    delete ret.passwordHash
+    delete ret.__v
+  }
+}
 
 module.exports = User = mongoose.model("users", UserSchema)

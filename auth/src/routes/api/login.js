@@ -1,12 +1,15 @@
 const express = require("express")
+const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 
 // IMPORT MODELS
 const User = require("../../models/User")
 
 // ERROR VALIDATIONS
 const validator = require("express-validator")
+const validateRequest = require("../../middlewares/validateRequest")
 const Errors = require("../../factory/errors")
-const { RequestValdationError } = Errors
+const { BadRequestError } = Errors
 
 // DECLARE ROUTER
 const router = express.Router()
@@ -18,20 +21,34 @@ router.post(
     validator
       .body("password")
       .trim()
-      .isLength({ min: 4, max: 20 })
-      .withMessage("Password must be between 4 and 20 characters")
+      .notEmpty()
+      .withMessage("You must supply a password")
   ],
+  validateRequest,
   async (req, res) => {
-    const errors = validator.validationResult(req)
-    if (!errors.isEmpty()) {
-      throw new RequestValdationError(errors.array())
-    }
     const { email, password } = req.body
     const existingUser = await User.findOne({ email })
 
-    if (existingUser) {
-      console.log("Email in use")
-      return res.send({})
+    if (!existingUser) {
+      throw new BadRequestError("Invalid credentials")
+    }
+
+    // CHECK PASSWORD
+    const match = await bcrypt.compareSync(password, existingUser.passwordHash)
+
+    if (match) {
+      // GENERATE JWT
+      const payload = {
+        id: existingUser.id,
+        email: existingUser.email
+      }
+
+      // STORE JWT
+      req.session = { jwt: jwt.sign(payload, process.env.JWT_KEY) }
+
+      res.status(200).send(existingUser)
+    } else {
+      throw new BadRequestError("Incorrect password")
     }
   }
 )
