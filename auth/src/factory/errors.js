@@ -10,7 +10,7 @@ class CustomError extends Error {
 
 // CHILDREN CLASS
 class RequestValdationError extends CustomError {
-  statusCode = 500
+  statusCode = 400
 
   constructor(errors) {
     super("Invalid request parameters")

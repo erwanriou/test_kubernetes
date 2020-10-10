@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/server.js",
-    "test": "jest --watchAll --no-cache"
+    "test": "jest --watchAll --runInBand"
   },
   "jest": {
     "testEnvironment": "node",

@@ -16,7 +16,9 @@ const app = express()
 // USE MAIN MIDDLWWARE
 app.set("trust proxy", true)
 app.use(bodyParser.json())
-app.use(cookieSession({ signed: false, secure: true }))
+app.use(
+  cookieSession({ signed: false, secure: process.env.NODE_ENV !== "test" })
+)
 
 // USE ROUTES
 routes.map(route => app.use(route.url, route.path))
