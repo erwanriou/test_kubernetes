@@ -1,22 +1,23 @@
 import { useState } from "react"
-import axios from "axios"
+import router from "next/router"
+// FETCH HOOKS
+import { useRequest } from "../../hooks/useRequest"
 
 const Register = () => {
   // HOOKS
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [errors, setErrors] = useState([])
+  const { doRequest, errors } = useRequest({
+    url: "/api/users/register",
+    method: "post",
+    body: { email, password },
+    onSucces: () => router.push("/")
+  })
 
   //SUBMIT
   const handleSubmit = async e => {
     e.preventDefault()
-    const data = { email, password }
-    try {
-      const res = await axios.post("/api/users/register", data)
-      console.log(res.data)
-    } catch (err) {
-      setErrors(err.response.data.errors)
-    }
+    await doRequest()
   }
 
   return (
@@ -40,7 +41,7 @@ const Register = () => {
           onChange={e => setPassword(e.target.value)}
         />
       </div>
-      {errors.map(err => err.message)}
+      {errors}
       <button className="btn btn-primary" type="submit">
         Register
       </button>
