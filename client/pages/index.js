@@ -1,3 +1,5 @@
-export default () => {
+const Main = () => {
   return <h1>LANDING PAGE</h1>
 }
+
+export default Main
