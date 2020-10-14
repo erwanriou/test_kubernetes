@@ -10,5 +10,4 @@ yarn-error.log*
 .env.production.local
 .prettierrc.yaml
 .prettierignore
-.npmrc
 .next
