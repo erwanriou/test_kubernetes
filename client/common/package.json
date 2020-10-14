@@ -10,6 +10,6 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "author": "",
+  "author": "Erwan Riou",
   "license": "ISC"
 }
