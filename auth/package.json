@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@erwanriou/ticket-shop-common": "0.0.8",
     "bcryptjs": "^2.4.3",
     "cookie-session": "^1.4.0",
     "express": "^4.17.1",

@@ -2,13 +2,15 @@ const express = require("express")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-// IMPORT MODELS
+// IMPORT MODELS AND LIBRARIES
+const importMiddlewares = require("@erwanriou/ticket-shop-common")
+const importFactory = require("@erwanriou/ticket-shop-common")
 const User = require("../../models/User")
 
 // ERROR VALIDATIONS
 const validator = require("express-validator")
-const validateRequest = require("../../middlewares/validateRequest")
-const Errors = require("../../factory/errors")
+const validateRequest = importMiddlewares("validateRequest")
+const Errors = importFactory("errors")
 const { BadRequestError } = Errors
 
 // DECLARE ROUTER
