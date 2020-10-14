@@ -1,8 +1,7 @@
 import { isServerHelper } from "../api/isServerHelper"
 
 const LandingPage = ({ user }) => {
-  console.log(user)
-  return <h1>LANDING PAGE</h1>
+  return user ? <h1>You are logged</h1> : <h1>You are not loggged</h1>
 }
 
 LandingPage.getInitialProps = async context => {
