@@ -1,8 +1,8 @@
 const express = require("express")
 
 // IMPORT MIDDLEWARE
-const importMiddlewares = require("@erwanriou/ticket-shop-common")
-const isCurrentUser = importMiddlewares("isCurrentUser")
+const importCommon = require("@erwanriou/ticket-shop-common")
+const isCurrentUser = importCommon("middlewares", "isCurrentUser")
 
 // DECLARE ROUTER
 const router = express.Router()

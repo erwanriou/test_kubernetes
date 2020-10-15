@@ -7,10 +7,9 @@ const cookieSession = require("cookie-session")
 const routes = require("./routes")
 
 // IMPORT MIDDLWARES
-const importMiddlewares = require("@erwanriou/ticket-shop-common")
-const importFactory = require("@erwanriou/ticket-shop-common")
-const errorHandler = importMiddlewares("errorHandler")
-const NotFoundError = importFactory("errors").NotFoundError
+const importCommon = require("@erwanriou/ticket-shop-common")
+const errorHandler = importCommon("middlewares", "errorHandler")
+const NotFoundError = importCommon("factory", "errors").NotFoundError
 
 // LAUNCH EXPRESS
 const app = express()
