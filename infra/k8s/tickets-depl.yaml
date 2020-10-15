@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: tickets
   template:
     metadata:
       labels:
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: erwanriou/ticketshop_auth
-          # image: us.gcr.io/ticketing-291819/auth
+        - name: tickets
+          image: erwanriou/ticketshop_tickets
+          # image: us.gcr.io/ticketing-291819/tickets
           env:
             - name: JWT_KEY
               valueFrom:
@@ -28,16 +28,16 @@ spec:
                   name: github-token
                   key: GITHUB_TOKEN
             - name: MONGO_URI
-              value: "mongodb://auth-srv-mongo:27017/auth"
+              value: "mongodb://tickets-srv-mongo:27017/tickets"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth
+    app: tickets
   ports:
-    - name: auth
+    - name: tickets
       port: 3000
       targetPort: 3000
