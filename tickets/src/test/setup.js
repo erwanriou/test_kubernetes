@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const faker = require("faker")
 const request = require("supertest")
+const jwt = require("jsonwebtoken")
 
 // IMPORT HELPERS
 const dbhandler = require("./dbhandler")
@@ -20,10 +21,15 @@ afterAll(async () => await dbhandler.closeDatabase())
 
 // GLOBAL SCOPE
 global.register = async user => {
-  const res = await request(app)
-    .post("/api/users/register")
-    .send(user)
-    .expect(201)
-
-  return res.get("Set-Cookie")
+  // BUILD A PAYLOAD
+  const payload = {
+    id: "ahfwfawlfawlkf",
+    email: "test@test.com"
+  }
+  // GENERATE TOKEN
+  const session = JSON.stringify({
+    jwt: jwt.sign(payload, process.env.JWT_KEY)
+  })
+  // BUILD OBJECT AND BASE 6$ ENCRYPT
+  return [`express:sess=${Buffer.from(session).toString("base64")}`]
 }
