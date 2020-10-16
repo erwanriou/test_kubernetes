@@ -13,11 +13,23 @@ it("It can only be accessed if user is signed in", async () => {
 })
 
 it("Return status different than 401 when user is signed in", async () => {
-  const res = await request(app).post("/api/tickets").send({})
+  const res = await request(app)
+    .post("/api/tickets")
+    .set("Cookie", global.register())
+    .send({})
+
   expect(res.status).not.toEqual(401)
 })
 
-it("Return an error if invalid title is provided", async () => {})
+it("Return an error if invalid title is provided", async () => {
+  await request(app)
+    .post("/api/tickets")
+    .set("Cookie", global.register())
+    .send({
+      title: "",
+      price: 10
+    })
+})
 
 it("Return an error if invalid price is provided", async () => {})
 

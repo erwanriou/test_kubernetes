@@ -20,7 +20,7 @@ beforeEach(async () => await dbhandler.clearDatabase())
 afterAll(async () => await dbhandler.closeDatabase())
 
 // GLOBAL SCOPE
-global.register = async user => {
+global.register = () => {
   // BUILD A PAYLOAD
   const payload = {
     id: "ahfwfawlfawlkf",
