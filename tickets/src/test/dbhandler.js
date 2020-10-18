@@ -8,7 +8,8 @@ module.exports.connect = async () => {
   const mongoUri = await mongo.getUri()
   await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   })
 }
 

@@ -9,8 +9,7 @@ const User = require("../../models/User")
 // ERROR VALIDATIONS
 const validator = require("express-validator")
 const validateRequest = importCommon("middlewares", "validateRequest")
-const Errors = importCommon("factory", "errors")
-const { BadRequestError } = Errors
+const { BadRequestError } = importCommon("factory", "errors")
 
 // DECLARE ROUTER
 const router = express.Router()

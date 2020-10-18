@@ -10,7 +10,7 @@ const routes = require("./routes")
 const importCommon = require("@erwanriou/ticket-shop-common")
 const errorHandler = importCommon("middlewares", "errorHandler")
 const isCurrentUser = importCommon("middlewares", "isCurrentUser")
-const NotFoundError = importCommon("factory", "errors").NotFoundError
+const { NotFoundError } = importCommon("factory", "errors")
 
 // LAUNCH EXPRESS
 const app = express()

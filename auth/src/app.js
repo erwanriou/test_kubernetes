@@ -9,7 +9,7 @@ const routes = require("./routes")
 // IMPORT MIDDLWARES
 const importCommon = require("@erwanriou/ticket-shop-common")
 const errorHandler = importCommon("middlewares", "errorHandler")
-const NotFoundError = importCommon("factory", "errors").NotFoundError
+const { NotFoundError } = importCommon("factory", "errors")
 
 // LAUNCH EXPRESS
 const app = express()

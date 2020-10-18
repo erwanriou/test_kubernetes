@@ -9,6 +9,7 @@ const Ticket = require("../../models/Ticket")
 
 //ERRORS VALIDATION
 const validateRequest = importCommon("middlewares", "validateRequest")
+const { NotFoundError, NotAuthorizedError } = importCommon("factory", "errors")
 const validator = require("express-validator")
 
 // DECLARE ROUTER
@@ -40,6 +41,70 @@ router.post(
     await ticket.save()
 
     res.status(201).send(ticket)
+  }
+)
+
+// @route  GET api/tickets
+// @desc   Get all tickets
+// @access Public
+router.get("/", async (req, res) => {
+  const tickets = await Ticket.find({})
+
+  res.send(tickets)
+})
+
+// @route  GET api/tickets/:id
+// @desc   Get a ticket by id
+// @access Public
+router.get("/:id", async (req, res) => {
+  const { id } = req.params
+  const ticket = await Ticket.findById(id)
+
+  if (!ticket) {
+    throw new NotFoundError()
+  }
+  res.status(200).send(ticket)
+})
+
+// @route  GET api/tickets
+// @desc   Get all tickets
+// @access Public
+router.put(
+  "/:id",
+  isLogged,
+  [
+    validator.body("title").not().isEmpty().withMessage("Title is required"),
+    validator
+      .body("price")
+      .isFloat({ gt: 0 })
+      .withMessage("Price must be greater than 0")
+  ],
+  validateRequest,
+  async (req, res) => {
+    const { title, price } = req.body
+    const { id } = req.params
+
+    const ticket = await Ticket.findById(id)
+
+    if (!ticket) {
+      throw new NotFoundError()
+    }
+
+    if (ticket.userId !== req.user.id) {
+      throw new NotAuthorizedError()
+    }
+
+    await Ticket.findOneAndUpdate(
+      { id },
+      {
+        $set: {
+          title,
+          price
+        },
+        new: true
+      }
+    )
+    res.send(ticket)
   }
 )
 

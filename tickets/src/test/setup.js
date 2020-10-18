@@ -23,8 +23,8 @@ afterAll(async () => await dbhandler.closeDatabase())
 global.register = () => {
   // BUILD A PAYLOAD
   const payload = {
-    id: "ahfwfawlfawlkf",
-    email: "test@test.com"
+    id: new mongoose.Types.ObjectId().toHexString(),
+    email: faker.internet.email()
   }
   // GENERATE TOKEN
   const session = JSON.stringify({
