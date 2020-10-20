@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@erwanriou/ticket-shop-common": "0.0.12",
+    "@erwanriou/ticket-shop-common": "0.0.21",
     "bcryptjs": "^2.4.3",
     "cookie-session": "^1.4.0",
     "express": "^4.17.1",
@@ -25,11 +25,12 @@
     "express-validator": "^6.6.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "5.10.8",
-    "nodemon": "^2.0.3"
+    "node-nats-streaming": "^0.3.2",
+    "nodemon": "^2.0.6"
   },
   "devDependencies": {
     "faker": "^5.1.0",
-    "jest": "^26.5.2",
+    "jest": "^26.6.0",
     "mongodb-memory-server": "^6.9.2",
     "supertest": "^5.0.0"
   }

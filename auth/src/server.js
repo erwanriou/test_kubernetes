@@ -1,8 +1,8 @@
 const app = require("./app")
-const connectDatabase = require("./services/database")
+const connect = require("./services/database")
 
 // CONNECT DATABASE
-connectDatabase()
+connect()
 
 // LISTEN APP
 app.listen(3000, () => {

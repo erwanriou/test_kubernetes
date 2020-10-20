@@ -7,6 +7,10 @@ const isLogged = importCommon("middlewares", "isLogged")
 // IMPORT MODEL
 const Ticket = require("../../models/Ticket")
 
+// IMPORT EVENTS
+const { NatsWrapper } = require("../../services/eventbus")
+const { TicketCreatedPub } = require("../../events/publishers/ticketCreatedPub")
+
 //ERRORS VALIDATION
 const validateRequest = importCommon("middlewares", "validateRequest")
 const { NotFoundError, NotAuthorizedError } = importCommon("factory", "errors")
@@ -39,7 +43,12 @@ router.post(
     })
 
     await ticket.save()
-
+    await new TicketCreatedPub(NatsWrapper.client()).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId
+    })
     res.status(201).send(ticket)
   }
 )
