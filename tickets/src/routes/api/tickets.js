@@ -10,6 +10,7 @@ const Ticket = require("../../models/Ticket")
 // IMPORT EVENTS
 const { NatsWrapper } = require("../../services/eventbus")
 const { TicketCreatedPub } = require("../../events/publishers/ticketCreatedPub")
+const { TicketUpdatedPub } = require("../../events/publishers/ticketUpdatedPub")
 
 //ERRORS VALIDATION
 const validateRequest = importCommon("middlewares", "validateRequest")
@@ -93,7 +94,7 @@ router.put(
     const { title, price } = req.body
     const { id } = req.params
 
-    const ticket = await Ticket.findById(id)
+    let ticket = await Ticket.findById(id)
 
     if (!ticket) {
       throw new NotFoundError()
@@ -102,17 +103,18 @@ router.put(
     if (ticket.userId !== req.user.id) {
       throw new NotAuthorizedError()
     }
-
-    await Ticket.findOneAndUpdate(
-      { id },
-      {
-        $set: {
-          title,
-          price
-        },
-        new: true
-      }
+    const ticketContent = { title, price }
+    ticket = await Ticket.findOneAndUpdate(
+      { _id: id },
+      { $set: ticketContent },
+      { new: true }
     )
+    await new TicketUpdatedPub(NatsWrapper.client()).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId
+    })
     res.send(ticket)
   }
 )
