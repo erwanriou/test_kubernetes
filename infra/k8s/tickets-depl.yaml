@@ -17,6 +17,16 @@ spec:
           image: erwanriou/ticketshop_tickets
           # image: us.gcr.io/ticketing-291819/tickets
           env:
+            - name: MONGO_URI
+              value: "mongodb://tickets-srv-mongo:27017/tickets"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -27,8 +37,7 @@ spec:
                 secretKeyRef:
                   name: github-token
                   key: GITHUB_TOKEN
-            - name: MONGO_URI
-              value: "mongodb://tickets-srv-mongo:27017/tickets"
+
 ---
 apiVersion: v1
 kind: Service

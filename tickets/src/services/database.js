@@ -4,7 +4,11 @@ const { NatsWrapper } = require("./eventbus")
 module.exports = async () => {
   try {
     // CONNECT NATS
-    await NatsWrapper.connect("ticketing", "asodhas", "http://nats-srv:4222")
+    await NatsWrapper.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URL
+    )
     // GRACEFULLY CLOSE
     NatsWrapper.client().on("close", () => {
       console.log("NATS connection closed")
