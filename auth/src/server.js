@@ -1,8 +1,9 @@
+const importCommon = require("@erwanriou/ticket-shop-common")
 const app = require("./app")
-const connect = require("./services/database")
+const connect = importCommon("services", "database")
 
 // CONNECT DATABASE
-connect()
+connect("Auth")
 
 // LISTEN APP
 app.listen(3000, () => {

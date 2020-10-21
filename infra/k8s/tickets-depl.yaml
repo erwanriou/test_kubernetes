@@ -37,7 +37,6 @@ spec:
                 secretKeyRef:
                   name: github-token
                   key: GITHUB_TOKEN
-
 ---
 apiVersion: v1
 kind: Service

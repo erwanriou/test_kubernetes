@@ -9,7 +9,7 @@ const isLogged = importCommon("middlewares", "isLogged")
 const Ticket = require("../../models/Ticket")
 
 // IMPORT EVENTS
-const { NatsWrapper } = require("../../services/eventbus")
+const { NatsWrapper } = importCommon("services", "eventbus")
 const { TicketCreatedPub } = require("../../events/publishers/ticketCreatedPub")
 const { TicketUpdatedPub } = require("../../events/publishers/ticketUpdatedPub")
 
