@@ -6,18 +6,20 @@ const importCommon = require("@erwanriou/ticket-shop-common")
 const isLogged = importCommon("middlewares", "isLogged")
 
 // IMPORT MODEL
-// const Orders = require("../../models/Orders")
+const Order = require("../../models/Order")
+const Ticket = require("../../models/Ticket")
 
 // IMPORT EVENTS
 const { NatsWrapper } = importCommon("services", "eventbus")
-// const { TicketCreatedPub } = require("../../events/publishers/ticketCreatedPub")
-// const { TicketUpdatedPub } = require("../../events/publishers/ticketUpdatedPub")
+// const { OrderCreatedPub } = require("../../events/publishers/orderCreatedPub")
+// const { OrderUpdatedPub } = require("../../events/publishers/orderUpdatedPub")
 
 //ERRORS VALIDATION
 const validator = require("express-validator")
 const validateRequest = importCommon("middlewares", "validateRequest")
 const {
   NotFoundError,
+  BadRequestError,
   NotAuthorizedError,
   DatabaseConnectionError
 } = importCommon("factory", "errors")
@@ -25,16 +27,17 @@ const {
 // DECLARE ROUTER
 const router = express.Router()
 
-// @route  GET api/tickets
-// @desc   Get all tickets
+const EXPIRATION_WINDOW_SECONDS = 15 * 60
+
+// @route  GET api/orders
+// @desc   Get all orders
 // @access Public
 router.get("/", async (req, res) => {
-  const orders = await Orders.find({})
-
+  const orders = await Order.find({})
   res.send(orders)
 })
 
-// @route  POST api/tickets
+// @route  POST api/orders
 // @desc   Create a ticket
 // @access Private
 router.post(
@@ -49,13 +52,26 @@ router.post(
   ],
   validateRequest,
   async (req, res) => {
-    const { title, price } = req.body
+    const { ticketId } = req.body
 
-    // CREATE TICKET
-    const order = new Ticket({
+    const _ticket = await Ticket.findById(ticketId)
+    // ENSURE TICKET  EXIST IN DATABASE OR IS NOT RESERVED
+    if (!_ticket) {
+      throw new NotFoundError()
+    }
+    const isReserved = await Ticket.isReserved()
+    if (isReserved) {
+      throw new BadRequestError("Ticket is already reserved")
+    }
+    // DEFINE EXPIRATION TIME
+    const expiration = new Date()
+    expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS)
+
+    const order = new Order({
       userId: req.user.id,
-      title,
-      price
+      status: "CREATED",
+      expiresAt: expiration,
+      _ticket
     })
 
     // HANDLE MONGODB TRANSACTIONS
@@ -65,14 +81,14 @@ router.post(
     try {
       await order.save()
       // PREVENT TEST ISSUES
-      if (process.env.NODE_ENV !== "test") {
-        await new TicketCreatedPub(NatsWrapper.client()).publish({
-          id: order.id,
-          title: order.title,
-          price: order.price,
-          userId: order.userId
-        })
-      }
+      // if (process.env.NODE_ENV !== "test") {
+      //   await new OrderCreatedPub(NatsWrapper.client()).publish({
+      //     id: order.id,
+      //     title: order.title,
+      //     price: order.price,
+      //     userId: order.userId
+      //   })
+      // }
       await SESSION.commitTransaction()
       res.status(201).send(order)
     } catch (err) {
