@@ -15,20 +15,19 @@ const TicketSchema = new Schema({
   }
 })
 
-TicketSchema.options.toJSON = {
-  transform(doc, ret) {
-    ret.id = ret._id
-    delete ret._id
-  }
-}
-
 TicketSchema.methods.isReserved = async function () {
   const existingOrder = await Order.findOne({
     _ticket: this,
     status: { $in: ["CREATED", "AWAITING_PAYMENT", "COMPLETED"] }
   })
+  return existingOrder
+}
 
-  return !!existingOrder
+TicketSchema.options.toJSON = {
+  transform(doc, ret) {
+    ret.id = ret._id
+    delete ret._id
+  }
 }
 
 module.exports = Ticket = mongoose.model("tickets", TicketSchema)

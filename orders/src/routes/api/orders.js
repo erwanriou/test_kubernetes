@@ -32,8 +32,9 @@ const EXPIRATION_WINDOW_SECONDS = 15 * 60
 // @route  GET api/orders
 // @desc   Get all orders
 // @access Public
-router.get("/", async (req, res) => {
-  const orders = await Order.find({})
+router.get("/", isLogged, async (req, res) => {
+  const orders = await Order.find({ userId: req.user.id }).populate("_ticket")
+
   res.send(orders)
 })
 
@@ -53,13 +54,13 @@ router.post(
   validateRequest,
   async (req, res) => {
     const { ticketId } = req.body
-
     const _ticket = await Ticket.findById(ticketId)
-    // ENSURE TICKET  EXIST IN DATABASE OR IS NOT RESERVED
+    // ENSURE TICKET EXIST IN DATABASE OR IS NOT RESERVED
     if (!_ticket) {
       throw new NotFoundError()
     }
-    const isReserved = await Ticket.isReserved()
+    // ENSURE TICKET IS NOT RESERVED
+    const isReserved = await _ticket.isReserved()
     if (isReserved) {
       throw new BadRequestError("Ticket is already reserved")
     }
@@ -67,6 +68,7 @@ router.post(
     const expiration = new Date()
     expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS)
 
+    // CREATE NEW ORDER
     const order = new Order({
       userId: req.user.id,
       status: "CREATED",
