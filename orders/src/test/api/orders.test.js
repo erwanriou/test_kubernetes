@@ -76,3 +76,48 @@ it("return list of order", async () => {
   expect(res.body[0]._ticket.title).toEqual(_ticket.title)
   expect(res.body.length).toEqual(1)
 })
+
+it("return a ticket specific to a user", async () => {
+  const user = global.register()
+  const _ticket = new Ticket({
+    title: faker.commerce.productName(),
+    price: faker.finance.amount()
+  })
+
+  await _ticket.save()
+  const { body: order } = await request(app)
+    .post("/api/orders")
+    .set("Cookie", user)
+    .send({ ticketId: _ticket.id })
+    .expect(201)
+
+  const res = await request(app)
+    .get(`/api/orders/${order.id}`)
+    .set("Cookie", user)
+    .expect(200)
+
+  expect(res.body._ticket.title).toEqual(_ticket.title)
+})
+
+it("return a canceled ticket when request delete ticket", async () => {
+  const user = global.register()
+  const _ticket = new Ticket({
+    title: faker.commerce.productName(),
+    price: faker.finance.amount()
+  })
+
+  await _ticket.save()
+  const { body: order } = await request(app)
+    .post("/api/orders")
+    .set("Cookie", user)
+    .send({ ticketId: _ticket.id })
+    .expect(201)
+
+  await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set("Cookie", user)
+    .expect(204)
+
+  const updatedOrder = await Order.findById(order.id)
+  expect(updatedOrder.status).toEqual("CANCELED")
+})

@@ -30,12 +30,76 @@ const router = express.Router()
 const EXPIRATION_WINDOW_SECONDS = 15 * 60
 
 // @route  GET api/orders
-// @desc   Get all orders
-// @access Public
+// @desc   Get all orders for a specific user
+// @access Private
 router.get("/", isLogged, async (req, res) => {
   const orders = await Order.find({ userId: req.user.id }).populate("_ticket")
 
   res.send(orders)
+})
+
+// @route  GET api/orders/:id
+// @desc   Get one specific order for a specific user
+// @access Private
+router.get("/:id", isLogged, async (req, res) => {
+  const { id } = req.params
+
+  const order = await Order.findById(id).populate("_ticket")
+
+  if (!order) {
+    throw new NotFoundError()
+  }
+  if (order.userId !== req.user.id) {
+    throw new NotAuthorizedError()
+  }
+
+  res.send(order)
+})
+
+// @route  DELETE api/orders/:id
+// @desc   Delete, or cancel one specific order for a specific user
+// @access Private
+router.delete("/:id", isLogged, async (req, res) => {
+  const { id } = req.params
+
+  let order = await Order.findById(id)
+
+  if (!order) {
+    throw new NotFoundError()
+  }
+  if (order.userId !== req.user.id) {
+    throw new NotAuthorizedError()
+  }
+
+  // HANDLE MONGODB TRANSACTIONS
+  const SESSION = await db.startSession()
+  await SESSION.startTransaction()
+  // TRANSACTION
+  try {
+    order = await Order.findOneAndUpdate(
+      { _id: id },
+      { $set: { status: "CANCELED" } },
+      { new: true }
+    )
+    // PREVENT TEST ISSUES
+    // if (process.env.NODE_ENV !== "test") {
+    //   await new TicketUpdatedPub(NatsWrapper.client()).publish({
+    //     id: ticket.id,
+    //     title: ticket.title,
+    //     price: ticket.price,
+    //     userId: ticket.userId
+    //   })
+    // }
+    await SESSION.commitTransaction()
+    res.status(204).send(order)
+  } catch (err) {
+    // CATCH ANY ERROR DUE TO TRANSACTION
+    await SESSION.abortTransaction()
+    throw new DatabaseConnectionError()
+  } finally {
+    // FINALIZE SESSION
+    SESSION.endSession()
+  }
 })
 
 // @route  POST api/orders
