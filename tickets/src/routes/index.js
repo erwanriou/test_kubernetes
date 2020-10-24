@@ -2,10 +2,7 @@
 const requires = (path, array, extention) =>
   array.map(item => ({
     path: require(`../routes/${path}/${item}`),
-    url:
-      extention !== undefined
-        ? `/${path}/${extention}/${item}`
-        : `/${path}/${item}`
+    url: `/${path}/${item}`
   }))
 
 let routes = ["tickets"]

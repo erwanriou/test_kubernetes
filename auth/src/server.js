@@ -1,6 +1,5 @@
-const importCommon = require("@erwanriou/ticket-shop-common")
 const app = require("./app")
-const connect = importCommon("services", "database")
+const connect = require("./services/database")
 
 // CONNECT DATABASE
 connect("Auth")
