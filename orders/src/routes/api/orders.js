@@ -11,8 +11,10 @@ const Ticket = require("../../models/Ticket")
 
 // IMPORT EVENTS
 const { NatsWrapper } = importCommon("services", "eventbus")
-// const { OrderCreatedPub } = require("../../events/publishers/orderCreatedPub")
-// const { OrderUpdatedPub } = require("../../events/publishers/orderUpdatedPub")
+const { OrderCreatedPub } = require("../../events/publishers/orderCreatedPub")
+const {
+  OrderCancelledPub
+} = require("../../events/publishers/orderCancelledPub")
 
 //ERRORS VALIDATION
 const validator = require("express-validator")
@@ -78,18 +80,17 @@ router.delete("/:id", isLogged, async (req, res) => {
   try {
     order = await Order.findOneAndUpdate(
       { _id: id },
-      { $set: { status: "CANCELED" } },
+      { $set: { status: "CANCELLED" } },
       { new: true }
     )
+
     // PREVENT TEST ISSUES
-    // if (process.env.NODE_ENV !== "test") {
-    //   await new TicketUpdatedPub(NatsWrapper.client()).publish({
-    //     id: ticket.id,
-    //     title: ticket.title,
-    //     price: ticket.price,
-    //     userId: ticket.userId
-    //   })
-    // }
+    if (process.env.NODE_ENV !== "test") {
+      await new OrderCancelledPub(NatsWrapper.client()).publish({
+        id: order.id,
+        ticket: { id: order._ticket }
+      })
+    }
     await SESSION.commitTransaction()
     res.status(204).send(order)
   } catch (err) {
@@ -147,14 +148,15 @@ router.post(
     try {
       await order.save()
       // PREVENT TEST ISSUES
-      // if (process.env.NODE_ENV !== "test") {
-      //   await new OrderCreatedPub(NatsWrapper.client()).publish({
-      //     id: order.id,
-      //     title: order.title,
-      //     price: order.price,
-      //     userId: order.userId
-      //   })
-      // }
+      if (process.env.NODE_ENV !== "test") {
+        await new OrderCreatedPub(NatsWrapper.client()).publish({
+          id: order.id,
+          status: order.status,
+          userId: order.userId,
+          expiresAt: order.expiresAt.toISOString(),
+          ticket: { id: _ticket.id, price: _ticket.price }
+        })
+      }
       await SESSION.commitTransaction()
       res.status(201).send(order)
     } catch (err) {

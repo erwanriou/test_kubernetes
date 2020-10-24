@@ -119,5 +119,5 @@ it("return a canceled ticket when request delete ticket", async () => {
     .expect(204)
 
   const updatedOrder = await Order.findById(order.id)
-  expect(updatedOrder.status).toEqual("CANCELED")
+  expect(updatedOrder.status).toEqual("CANCELLED")
 })
