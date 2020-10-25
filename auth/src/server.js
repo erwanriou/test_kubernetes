@@ -1,8 +1,8 @@
 const app = require("./app")
-const connect = require("./services/database")
+const transaction = require("./services/transactions")
 
 // CONNECT DATABASE
-connect("Auth")
+transaction("Auth")
 
 // LISTEN APP
 app.listen(3000, () => {
