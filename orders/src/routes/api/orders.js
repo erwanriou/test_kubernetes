@@ -10,7 +10,7 @@ const Order = require("../../models/Order")
 const Ticket = require("../../models/Ticket")
 
 // IMPORT EVENTS
-const { NatsWrapper } = require("../../services/eventbus")
+const { NatsWrapper } = require("../../services/natsWrapper")
 const { OrderCreatedPub } = require("../../events/publishers/orderCreatedPub")
 const {
   OrderCancelledPub
