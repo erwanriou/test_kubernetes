@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@erwanriou/ticket-shop-common": "0.0.25",
+    "@erwanriou/ticket-shop-common": "0.0.27",
     "bcryptjs": "^2.4.3",
     "cookie-session": "^1.4.0",
     "express": "^4.17.1",
@@ -25,6 +25,7 @@
     "express-validator": "^6.6.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "5.10.8",
+    "node-nats-streaming": "^0.3.2",
     "nodemon": "^2.0.6"
   },
   "devDependencies": {
