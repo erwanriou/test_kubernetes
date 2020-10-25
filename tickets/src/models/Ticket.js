@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { updateIfCurrentPlugin } = require("mongoose-update-if-current")
 
 const Schema = mongoose.Schema
 
@@ -30,5 +31,7 @@ TicketSchema.options.toJSON = {
     delete ret._id
   }
 }
+
+TicketSchema.plugin(updateIfCurrentPlugin)
 
 module.exports = Ticket = mongoose.model("tickets", TicketSchema)

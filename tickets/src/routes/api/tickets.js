@@ -133,11 +133,12 @@ router.put(
     await SESSION.startTransaction()
     // TRANSACTION
     try {
-      ticket = await Ticket.findOneAndUpdate(
-        { _id: id },
-        { $set: ticketContent },
-        { new: true }
-      )
+      ticket = await ticket.set(ticketContent).save()
+      // ticket = await Ticket.findOneAndUpdate(
+      //   { _id: id },
+      //   { $set: { ...ticketContent } },
+      //   { new: true }
+      // )
       // PREVENT TEST ISSUES
       if (process.env.NODE_ENV !== "test") {
         await new TicketUpdatedPub(NatsWrapper.client()).publish({
