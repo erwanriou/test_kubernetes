@@ -13,6 +13,9 @@ beforeAll(async () => {
   await dbhandler.connect()
 })
 
+// MOCKED FILES
+jest.mock("../services/natsWrapper", () => require("./mocks/natsWrapper"))
+
 // DROP TEST DABASE
 beforeEach(async () => await dbhandler.clearDatabase())
 
