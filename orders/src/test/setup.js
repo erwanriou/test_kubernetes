@@ -7,6 +7,9 @@ const jwt = require("jsonwebtoken")
 const dbhandler = require("./dbhandler")
 const app = require("../app")
 
+// MOCKED FILES
+jest.mock("../services/natsWrapper", () => require("./mocks/natsWrapper"))
+
 // CREATE TEST DATABASE
 beforeAll(async () => {
   process.env.JWT_KEY = faker.random.uuid()
