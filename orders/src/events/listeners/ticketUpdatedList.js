@@ -10,23 +10,18 @@ class TicketUpdatedList extends Listener {
   queueGroupName = QueueGroupName.ORDER_SERVICE
 
   async onMessage(data, msg) {
-    const { title, price, id } = data
-    const ticket = await Ticket.findById(id)
+    const ticket = await Ticket.findByEvent(data)
 
     if (!ticket) {
       throw new Error("Ticket not found")
     }
 
     const ticketContent = {
-      title,
-      price
+      title: data.title,
+      price: data.price
     }
 
-    await Ticket.findOneAndUpdate(
-      { _id: id },
-      { $set: ticketContent },
-      { new: true }
-    )
+    await ticket.set(ticketContent).save()
     msg.ack()
   }
 }

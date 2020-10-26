@@ -61,7 +61,8 @@ router.post(
           id: ticket.id,
           title: ticket.title,
           price: ticket.price,
-          userId: ticket.userId
+          userId: ticket.userId,
+          __v: ticket.__v
         })
       }
       await SESSION.commitTransaction()
@@ -134,18 +135,14 @@ router.put(
     // TRANSACTION
     try {
       ticket = await ticket.set(ticketContent).save()
-      // ticket = await Ticket.findOneAndUpdate(
-      //   { _id: id },
-      //   { $set: { ...ticketContent } },
-      //   { new: true }
-      // )
       // PREVENT TEST ISSUES
       if (process.env.NODE_ENV !== "test") {
         await new TicketUpdatedPub(NatsWrapper.client()).publish({
           id: ticket.id,
           title: ticket.title,
           price: ticket.price,
-          userId: ticket.userId
+          userId: ticket.userId,
+          __v: ticket.__v
         })
       }
       await SESSION.commitTransaction()

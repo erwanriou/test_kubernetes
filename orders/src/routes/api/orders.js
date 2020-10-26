@@ -78,11 +78,7 @@ router.delete("/:id", isLogged, async (req, res) => {
   await SESSION.startTransaction()
   // TRANSACTION
   try {
-    order = await Order.findOneAndUpdate(
-      { _id: id },
-      { $set: { status: "CANCELLED" } },
-      { new: true }
-    )
+    order = await order.set({ status: "CANCELLED" }).save()
 
     // PREVENT TEST ISSUES
     if (process.env.NODE_ENV !== "test") {
