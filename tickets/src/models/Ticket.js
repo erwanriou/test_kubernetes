@@ -16,6 +16,9 @@ const TicketSchema = new Schema({
     type: Number,
     required: true
   },
+  orderId: {
+    type: String
+  },
   updatedAt: {
     type: Date
   },

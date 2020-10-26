@@ -83,3 +83,15 @@ it("acks the message when update", async () => {
 
   expect(msg.ack).toHaveBeenCalled()
 })
+
+it("it doesn't call ack if version is not corresponding", async () => {
+  const { listener, data, ticket, msg } = await updatedListenerSetup()
+
+  data.__v = 10
+
+  try {
+    await listener.onMessage(data, msg)
+  } catch (e) {}
+
+  expect(msg.ack).not.toHaveBeenCalled()
+})

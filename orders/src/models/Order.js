@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-
+const { updateIfCurrentPlugin } = require("mongoose-update-if-current")
 const Schema = mongoose.Schema
 
 const OrderSchema = new Schema({
@@ -24,6 +24,8 @@ const OrderSchema = new Schema({
     default: Date.now()
   }
 })
+
+OrderSchema.plugin(updateIfCurrentPlugin)
 
 OrderSchema.options.toJSON = {
   transform(doc, ret) {
