@@ -7,8 +7,8 @@ const { NatsWrapper } = require("../../services/natsWrapper")
 const Ticket = require("../../models/Ticket")
 
 // CHILDREN CLASS
-class OrderCreatedList extends Listener {
-  subject = Subject.ORDER_CREATED
+class OrderCancelList extends Listener {
+  subject = Subject.ORDER_CANCELLED
   queueGroupName = QueueGroupName.TICKET_SERVICE
 
   async onMessage(data, msg) {
@@ -18,7 +18,7 @@ class OrderCreatedList extends Listener {
       throw new Error("Ticket not found")
     }
 
-    ticket.set({ orderId: data.id })
+    ticket.set({ orderId: undefined })
     await ticket.save()
     if (process.env.NODE_ENV !== "test") {
       await new TicketUpdatedPub(NatsWrapper.client()).publish(ticket)
@@ -27,4 +27,4 @@ class OrderCreatedList extends Listener {
   }
 }
 
-exports.OrderCreatedList = OrderCreatedList
+exports.OrderCancelList = OrderCancelList
