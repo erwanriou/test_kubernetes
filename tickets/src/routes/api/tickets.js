@@ -17,6 +17,7 @@ const { TicketUpdatedPub } = require("../../events/publishers/ticketUpdatedPub")
 const validator = require("express-validator")
 const validateRequest = importCommon("middlewares", "validateRequest")
 const {
+  BadRequestError,
   NotFoundError,
   NotAuthorizedError,
   DatabaseConnectionError
@@ -122,6 +123,10 @@ router.put(
 
     if (!ticket) {
       throw new NotFoundError()
+    }
+
+    if (ticket.orderId) {
+      throw new BadRequestError("Cannot edit a reserved Ticket")
     }
 
     if (ticket.userId !== req.user.id) {

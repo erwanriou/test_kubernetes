@@ -192,3 +192,31 @@ it("Update the ticket if all provided info are corrects", async () => {
     })
     .expect(200)
 })
+
+it("reject update if the ticket is reserved", async () => {
+  const cookie = global.register()
+
+  let ticket = {
+    title: faker.commerce.productName(),
+    price: faker.commerce.price()
+  }
+
+  const res = await request(app)
+    .post("/api/tickets")
+    .set("Cookie", cookie)
+    .send(ticket)
+    .expect(201)
+
+  ticket = await Ticket.findById(res.body.id)
+  ticket.set({ orderId: mongoose.Types.ObjectId().toHexString() })
+  await ticket.save()
+
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set("Cookie", cookie)
+    .send({
+      title: faker.commerce.productName(),
+      price: faker.commerce.price()
+    })
+    .expect(400)
+})
