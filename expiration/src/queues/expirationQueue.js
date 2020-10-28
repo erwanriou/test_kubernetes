@@ -1,4 +1,8 @@
 const Queue = require("bull")
+const { NatsWrapper } = require("../services/natsWrapper")
+const {
+  ExpirationCompletedPub
+} = require("../events/publishers/expirationCompletedPub")
 
 const expirationQueue = new Queue("order:expiration", {
   redis: {
@@ -7,7 +11,9 @@ const expirationQueue = new Queue("order:expiration", {
 })
 
 expirationQueue.process(async job => {
-  console.log("i want to publish an expiration", job.data.orderId)
+  new ExpirationCompletedPub(NatsWrapper.client()).publish({
+    orderId: job.data.orderId
+  })
 })
 
 exports.expirationQueue = expirationQueue
