@@ -1,3 +1,4 @@
+const importCommon = require("@erwanriou/ticket-shop-common")
 const { Listener } = importCommon("factory", "listener")
 const { Subject, QueueGroupName } = importCommon("factory", "types")
 const { TicketUpdatedPub } = require("../publishers/ticketUpdatedPub")
