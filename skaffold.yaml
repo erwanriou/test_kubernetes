@@ -46,3 +46,12 @@ build:
         manual:
           - src: "**/*.js"
             dest: .
+    - image: erwanriou/ticketshop_expiration
+      # - image: us.gcr.io/ticketing-291819/client
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .
