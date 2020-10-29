@@ -1,6 +1,9 @@
 const { NatsWrapper } = require("./natsWrapper")
 const { TicketCreatedList } = require("../events/listeners/ticketCreatedList")
 const { TicketUpdatedList } = require("../events/listeners/ticketUpdatedList")
+const {
+  ExpirationCompletedList
+} = require("../events/listeners/expirationCompletedList")
 
 module.exports = async natsStreaming => {
   if (!process.env.NATS_CLIENT_ID) {
@@ -29,4 +32,5 @@ module.exports = async natsStreaming => {
   // LISTENNING TRAFFIC
   new TicketCreatedList(NatsWrapper.client()).listen()
   new TicketUpdatedList(NatsWrapper.client()).listen()
+  new ExpirationCompletedList(NatsWrapper.client()).listen()
 }
