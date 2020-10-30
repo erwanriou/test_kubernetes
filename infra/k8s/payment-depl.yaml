@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment
+          image: erwanriou/ticketshop_payment
+          # image: us.gcr.io/ticketing-291819/payment
+          env:
+            - name: MONGO_URI
+              value: "mongodb://payment-srv-mongo:27017/payment"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-token
+                  key: GITHUB_TOKEN
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-srv
+spec:
+  selector:
+    app: payment
+  ports:
+    - name: payment
+      port: 3000
+      targetPort: 3000
