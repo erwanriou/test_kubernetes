@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@erwanriou/ticket-shop-common": "0.0.35",
+    "@erwanriou/ticket-shop-common": "0.0.36",
     "bull": "^3.18.1",
     "node-nats-streaming": "^0.3.2",
     "nodemon": "^2.0.6"
