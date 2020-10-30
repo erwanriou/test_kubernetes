@@ -11,13 +11,16 @@ class OrderCancelList extends Listener {
   queueGroupName = QueueGroupName.PAYMENT_SERVICE
 
   async onMessage(data, msg) {
-    const order = await Order.findById(data.id)
+    const order = await Order.findOne({
+      _id: data.id,
+      __v: data.__v - 1
+    })
 
     if (!order) {
       throw new Error("Order not found")
     }
 
-    order.set({ orderId: undefined })
+    order.set({ status: "CANCELLED" })
     await order.save()
 
     msg.ack()
