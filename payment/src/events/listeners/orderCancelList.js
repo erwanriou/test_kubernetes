@@ -6,23 +6,22 @@ const { Subject, QueueGroupName } = importCommon("factory", "types")
 const Order = require("../../models/Order")
 
 // CHILDREN CLASS
-class OrderCreatedList extends Listener {
-  subject = Subject.ORDER_CREATED
+class OrderCancelList extends Listener {
+  subject = Subject.ORDER_CANCELLED
   queueGroupName = QueueGroupName.PAYMENT_SERVICE
 
   async onMessage(data, msg) {
-    const order = new Order({
-      _id: data.id,
-      __v: data.__v,
-      userId: data.userId,
-      price: data.ticket.price,
-      status: data.status
-    })
+    const order = await Order.findById(data.id)
 
+    if (!order) {
+      throw new Error("Order not found")
+    }
+
+    order.set({ orderId: undefined })
     await order.save()
 
     msg.ack()
   }
 }
 
-exports.OrderCreatedList = OrderCreatedList
+exports.OrderCancelList = OrderCancelList
