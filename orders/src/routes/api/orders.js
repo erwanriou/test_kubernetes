@@ -29,7 +29,7 @@ const {
 // DECLARE ROUTER
 const router = express.Router()
 
-const EXPIRATION_WINDOW_SECONDS = 1 * 60
+const EXPIRATION_WINDOW_SECONDS = 15 * 60
 
 // @route  GET api/orders
 // @desc   Get all orders for a specific user
