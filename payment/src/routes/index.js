@@ -5,7 +5,7 @@ const requires = (path, array, extention) =>
     url: `/${path}/${item}`
   }))
 
-let routes = ["payment"]
+let routes = ["payments"]
 routes = requires("api", routes)
 
 module.exports = routes = [...routes]

@@ -23,10 +23,10 @@ beforeEach(async () => await dbhandler.clearDatabase())
 afterAll(async () => await dbhandler.closeDatabase())
 
 // GLOBAL SCOPE
-global.register = () => {
+global.register = id => {
   // BUILD A PAYLOAD
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || mongoose.Types.ObjectId().toHexString(),
     email: faker.internet.email()
   }
   // GENERATE TOKEN

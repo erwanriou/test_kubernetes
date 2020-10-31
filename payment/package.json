@@ -27,7 +27,8 @@
     "mongoose": "5.10.8",
     "mongoose-update-if-current": "^1.4.0",
     "node-nats-streaming": "^0.3.2",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "stripe": "^8.119.0"
   },
   "devDependencies": {
     "faker": "^5.1.0",

@@ -1,4 +1,6 @@
 const { NatsWrapper } = require("./natsWrapper")
+const { OrderCreatedList } = require("../events/listeners/orderCreatedList")
+const { OrderCancelList } = require("../events/listeners/orderCancelList")
 
 module.exports = async natsStreaming => {
   if (!process.env.NATS_CLIENT_ID) {
@@ -25,4 +27,6 @@ module.exports = async natsStreaming => {
   process.on("SIGTERM", () => NatsWrapper.client().close())
 
   // LISTENNING TRAFFIC
+  new OrderCreatedList(NatsWrapper.client()).listen()
+  new OrderCancelList(NatsWrapper.client()).listen()
 }

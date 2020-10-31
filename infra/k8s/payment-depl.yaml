@@ -37,6 +37,11 @@ spec:
                 secretKeyRef:
                   name: github-token
                   key: GITHUB_TOKEN
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_KEY
 ---
 apiVersion: v1
 kind: Service
