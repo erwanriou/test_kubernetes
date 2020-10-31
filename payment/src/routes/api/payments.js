@@ -20,6 +20,12 @@ const {
   DatabaseConnectionError
 } = importCommon("factory", "errors")
 
+// EVENTS
+const { NatsWrapper } = require("../../services/natsWrapper")
+const {
+  PaymentCreatedPub
+} = require("../../events/publishers/paymentCreatedPub")
+
 // DECLARE ROUTER
 const router = express.Router()
 
@@ -50,20 +56,42 @@ router.post(
       throw new BadRequestError("Status of the order have been cancelled.")
     }
 
-    const charge = await Stripe.charges.create({
-      currency: "eur",
-      amount: order.price * 100,
-      source: token
-    })
+    // HANDLE MONGODB TRANSACTIONS
+    const SESSION = await db.startSession()
+    await SESSION.startTransaction()
+    // TRANSACTION
+    try {
+      const charge = await Stripe.charges.create({
+        currency: "eur",
+        amount: order.price * 100,
+        source: token
+      })
 
-    const payment = new Payment({
-      orderId,
-      stripeId: charge.id
-    })
+      const payment = new Payment({
+        orderId,
+        stripeId: charge.id
+      })
 
-    await payment.save()
+      await payment.save()
 
-    res.status(201).send({ success: true })
+      // PREVENT TEST ISSUES
+      if (process.env.NODE_ENV !== "test") {
+        await new PaymentCreatedPub(NatsWrapper.client()).publish({
+          id: payment.id,
+          orderId: payment.orderId,
+          stripeId: payment.stripeId
+        })
+      }
+      await SESSION.commitTransaction()
+      res.status(201).send({ id: payment.id })
+    } catch (err) {
+      // CATCH ANY ERROR DUE TO TRANSACTION
+      await SESSION.abortTransaction()
+      throw new DatabaseConnectionError()
+    } finally {
+      // FINALIZE SESSION
+      SESSION.endSession()
+    }
   }
 )
 

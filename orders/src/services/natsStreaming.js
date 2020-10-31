@@ -1,4 +1,5 @@
 const { NatsWrapper } = require("./natsWrapper")
+const { PaymentCreatedList } = require("../events/listeners/paymentCreatedList")
 const { TicketCreatedList } = require("../events/listeners/ticketCreatedList")
 const { TicketUpdatedList } = require("../events/listeners/ticketUpdatedList")
 const {
@@ -33,4 +34,5 @@ module.exports = async natsStreaming => {
   new TicketCreatedList(NatsWrapper.client()).listen()
   new TicketUpdatedList(NatsWrapper.client()).listen()
   new ExpirationCompletedList(NatsWrapper.client()).listen()
+  new PaymentCreatedList(NatsWrapper.client()).listen()
 }
