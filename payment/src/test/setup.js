@@ -15,6 +15,7 @@ beforeAll(async () => {
 
 // MOCKED FILES
 jest.mock("../services/natsWrapper", () => require("./mocks/natsWrapper"))
+jest.mock("../services/stripe", () => require("./mocks/stripe"))
 
 // DROP TEST DABASE
 beforeEach(async () => await dbhandler.clearDatabase())

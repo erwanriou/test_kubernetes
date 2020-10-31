@@ -4,10 +4,11 @@ const db = require("mongoose")
 // IMPORT MIDDLWARES
 const importCommon = require("@erwanriou/ticket-shop-common")
 const isLogged = importCommon("middlewares", "isLogged")
+const { Stripe } = require("../../services/stripe")
 
 // IMPORT MODEL
 const Order = require("../../models/Order")
-const Charge = require("../../models/Charge")
+const Payment = require("../../models/Payment")
 
 //ERRORS VALIDATION
 const validator = require("express-validator")
@@ -49,7 +50,20 @@ router.post(
       throw new BadRequestError("Status of the order have been cancelled.")
     }
 
-    res.send({ success: true })
+    const charge = await Stripe.charges.create({
+      currency: "eur",
+      amount: order.price * 100,
+      source: token
+    })
+
+    const payment = new Payment({
+      orderId,
+      stripeId: charge.id
+    })
+
+    await payment.save()
+
+    res.status(201).send({ success: true })
   }
 )
 
