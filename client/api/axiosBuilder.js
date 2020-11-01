@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export const isServerHelper = ({ req }) => {
+export const axiosBuilder = ({ req }) => {
   const isServer = !!req
     ? {
         url: "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local",
