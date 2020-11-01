@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import router from "next/router"
+import Router from "next/router"
 import { useRequest } from "../../hooks/useRequest"
 
 const Logout = () => {
@@ -7,7 +7,7 @@ const Logout = () => {
     url: "/api/users/logout",
     method: "post",
     body: {},
-    onSucces: () => router.push("/")
+    onSucces: () => Router.push("/")
   })
 
   useEffect(() => {

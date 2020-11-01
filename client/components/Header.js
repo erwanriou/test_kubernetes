@@ -2,6 +2,8 @@ import Link from "next/link"
 
 const Header = ({ user }) => {
   const links = [
+    { isLogged: user, label: "sell ticket", href: "/tickets/new" },
+    { isLogged: user, label: "my orders", href: "/orders" },
     { isLogged: user, label: "logout", href: "/auth/logout" },
     { isLogged: !user, label: "login", href: "/auth/login" },
     { isLogged: !user, label: "register", href: "/auth/register" }

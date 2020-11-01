@@ -83,7 +83,7 @@ router.post(
 // @desc   Get all tickets
 // @access Public
 router.get("/", async (req, res) => {
-  const tickets = await Ticket.find({})
+  const tickets = await Ticket.find({ orderId: undefined })
 
   res.send(tickets)
 })

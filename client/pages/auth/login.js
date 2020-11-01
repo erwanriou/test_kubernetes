@@ -1,5 +1,5 @@
 import { useState } from "react"
-import router from "next/router"
+import Router from "next/router"
 // FETCH HOOKS
 import { useRequest } from "../../hooks/useRequest"
 
@@ -11,7 +11,7 @@ const Login = () => {
     url: "/api/users/login",
     method: "post",
     body: { email, password },
-    onSucces: () => router.push("/")
+    onSucces: () => Router.push("/")
   })
 
   //SUBMIT
