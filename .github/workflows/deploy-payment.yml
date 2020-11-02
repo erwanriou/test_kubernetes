@@ -1,0 +1,24 @@
+name: deploy-payment
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - payment/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - run: cd payment && echo -e "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" > .env.local && docker build -t erwanriou/ticketshop_payment .
+      - run: docker login -u  ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push erwanriou/ticketshop_payment
+      - name: Configure deploy with digital ocean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubectl rollout restart deployment payment-depl
