@@ -15,7 +15,6 @@ spec:
       containers:
         - name: expiration
           image: erwanriou/ticketshop_expiration
-          # image: us.gcr.io/ticketing-291819/expiration
           env:
             - name: NATS_URL
               value: "http://nats-srv:4222"
