@@ -32,11 +32,6 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: github-token
-                  key: GITHUB_TOKEN
 ---
 apiVersion: v1
 kind: Service

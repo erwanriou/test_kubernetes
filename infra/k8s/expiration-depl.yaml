@@ -25,10 +25,5 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: github-token
-                  key: GITHUB_TOKEN
             - name: REDIS_HOST
               value: expiration-srv-redis
