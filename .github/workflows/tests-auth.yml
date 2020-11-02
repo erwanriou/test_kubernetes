@@ -1,8 +1,9 @@
-
-name: tests
+name: tests-auth
 
 on:
-  pull_request
+  pull_request:
+    paths:
+      - "auth/**"
 
 jobs:
   build:
@@ -10,4 +11,3 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd auth && echo -e "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}} \n@erwanriou:registry=https://npm.pkg.github.com/erwanriou \nregistry=https://registry.npmjs.org" > .npmrc && npm i && npm run test:ci
-

@@ -15,7 +15,6 @@ spec:
       containers:
         - name: expiration
           image: erwanriou/ticketshop_expiration
-          # image: us.gcr.io/ticketing-291819/expiration
           env:
             - name: NATS_URL
               value: "http://nats-srv:4222"
@@ -25,10 +24,5 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: github-token
-                  key: GITHUB_TOKEN
             - name: REDIS_HOST
               value: expiration-srv-redis

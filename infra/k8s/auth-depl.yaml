@@ -15,7 +15,6 @@ spec:
       containers:
         - name: auth
           image: erwanriou/ticketshop_auth
-          # image: us.gcr.io/ticketing-291819/auth
           env:
             - name: MONGO_URI
               value: "mongodb://auth-srv-mongo:27017/auth"
@@ -32,11 +31,6 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: github-token
-                  key: GITHUB_TOKEN
 ---
 apiVersion: v1
 kind: Service
