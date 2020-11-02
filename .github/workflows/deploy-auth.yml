@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - run: cd auth && docker build -t erwanriou/ticketshop_auth
+      - run: cd auth && docker build -t erwanriou/ticketshop_auth .
       - name: Push to Docker Hub
         uses: docker/build-push-action@v1
         with:
