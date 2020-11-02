@@ -1,6 +1,7 @@
 const { NatsWrapper } = require("./natsWrapper")
 
 module.exports = async natsStreaming => {
+  console.log("LOL")
   // CONNECT NATS
   await NatsWrapper.connect(
     process.env.NATS_CLUSTER_ID,
