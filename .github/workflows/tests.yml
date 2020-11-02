@@ -1,3 +1,4 @@
+
 name: tests
 
 on:
@@ -8,5 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: echo -e "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}} \n@erwanriou:registry=https://npm.pkg.github.com/erwanriou \nregistry=https://registry.npmjs.org" > .npmrc
       - run: cd auth && npm i && npm run test:ci
     
