@@ -1,0 +1,23 @@
+
+name: deploy-manifests
+
+on: 
+  push:
+    branches: 
+      - master
+    paths:
+      - infra/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Configure deploy with digital ocean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubectl apply -f infra/ks8
+        
