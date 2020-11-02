@@ -2,6 +2,7 @@ const app = require("./app")
 const transaction = require("./services/transactions")
 
 // CONNECT DATABASE
+console.log("Connecting")
 transaction("Ticket")
 
 // LISTEN APP
