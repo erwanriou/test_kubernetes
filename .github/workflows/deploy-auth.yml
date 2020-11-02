@@ -1,0 +1,23 @@
+name: deploy-auth
+
+on: 
+  push:
+    branches: 
+      - master
+    paths:
+      - auth/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - run: cd auth && docker build -t erwanriou/ticketshop_auth
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: erwanriou/ticketshop_auth
+          tag_with_ref: true
